@@ -1,24 +1,30 @@
 import sys
 N = int(input())
-data = [sys.stdin.readline().strip() for i in range(N)]
-data.sort(key=lambda x: len(x), reverse=True)  # 입력 data를 길이가 긴 순으로 정렬
-sumation = []
+data = []
+for i in range(N):  # data 에 입력받은 문자열을 리스트로 정렬
+    data.append(list(sys.stdin.readline()))
+    data[i].pop()
+
+# 높은 자리수의 알파벳에 높은 숫자 배정하여 딕셔너리에 저장
 a = {}
-v = 9
-for i in range(N):
-    for j in data[i]:
-        if j not in a:
-            a[j] = str(v)
-            j = v
-            v -= 1
+for i in data:
+    k = len(i)-1
+    for j in i:
+        if j in a:  # 만약 딕셔너리에 이미 있으면
+            a[j] += pow(10, k)  # 자릿수만큼 곱한것 더함
+        else:
+            a[j] = pow(10, k)  # 딕셔너리에 추가
+        k -= 1
+nums = []
+for value in a.values():
+    nums.append(value)
 
-for i in range(N):
-    sumation.append([])
-    for j in data[i]:
-        sumation[i].append(a.get(j))
-    sumation[i] = "".join(sumation[i])
-
-sum = 0
-for i in range(N):
-    sum += int(sumation[i])
-print(sum)
+# 숫자 큰 순으로 정렬하기
+nums.sort(reverse=True)
+# 결과와 곱해야하는 수 초기화 하기
+result, t = 0,9
+# 값 구하기
+for i in range(len(nums)):
+    result += nums[i]*t
+    t -= 1
+print(result)
