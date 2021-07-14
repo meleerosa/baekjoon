@@ -1,33 +1,34 @@
-import sys
-# n행 m열의 행렬을 저장하기
-N, M = map(int, sys.stdin.readline().split())
-A = []
-B = []
-for i in range(N):
-    a = sys.stdin.readline().rstrip()
-    A.append(list(a))
-for i in range(N):
-    b = sys.stdin.readline().rstrip()
-    B.append(list(b))
-
-# x행,y열의 원소부터 3x3 부분 행렬의 원소를 변환하기
-def convert(x, y):
-    for i in range(x,x+3):
-        for j in range(y,y+3):
-            if A[i][j] == '1':
-                A[i][j] = '0'
-            else:
-                A[i][j] = '1'
-
+n, m = map(int, input().split())
+graph1 = []
+graph2 = []
 count = 0
 
-for i in range(N-2):
-    for j in range(M-2):
-        if A[i][j] != B[i][j]:
-            convert(i,j)
-            count += 1
-            print(A)
-if A == B:
-    print(count)
-else:
+def convertgraph(i, j):			# 3x3을 뒤집는 함수
+    for x in range(i, i + 3):
+        for y in range(j, j + 3):
+            graph1[x][y] = 1 - graph1[x][y]
+
+
+for i in range(n):				# 변환 전 함수 입력
+    graph1.append(list(map(int, input())))
+
+for i in range(n):				# 변환 후 함수 입력
+    graph2.append(list(map(int, input())))
+
+for i in range(n - 2):
+    for j in range(m - 2):
+        if graph1[i][j] != graph2[i][j]: # 일치하지 않는 부분 발생
+            convertgraph(i, j)			 # 뒤집고
+            count += 1				 	 # 횟수 + 1
+flag = 0							# 변환 할 수 있는지 나타내는 변수
+
+for i in range(n):					# 변환 후 일치하는지 확인
+    for j in range(m):
+        if graph1[i][j] != graph2[i][j]:
+            flag = 1
+            break
+
+if flag == 1:							# 변환이 불가능 하면 -1 반환
     print(-1)
+else:
+    print(count)
